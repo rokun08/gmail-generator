@@ -85,6 +85,15 @@
       opacity: 0.7;
       margin-top: 4px;
     }
+    .gmail-entry {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .serial-number {
+      font-weight: bold;
+      margin-right: 5px;
+    }
   </style>
 </head>
 <body>
@@ -160,8 +169,17 @@
         checkbox.onchange = () => toggleSelect(email);
         if (selected.includes(email)) checkbox.checked = true;
 
+        const serial = document.createElement('span');
+        serial.className = 'serial-number';
+        serial.innerText = `${index + 1}.`;
+
+        const entry = document.createElement('div');
+        entry.className = 'gmail-entry';
+        entry.appendChild(serial);
+        entry.appendChild(document.createTextNode(email));
+
         label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(`#${index + 1}: ${email}`));
+        label.appendChild(entry);
         li.appendChild(label);
 
         const diffMin = Math.floor((now - new Date(time)) / 60000);

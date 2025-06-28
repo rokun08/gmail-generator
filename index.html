@@ -48,16 +48,18 @@
       padding: 12px 20px;
       margin: 10px 8px 20px 0;
       border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 50px;
+      background: linear-gradient(145deg, #00c6ff, #0072ff);
       color: white;
       font-weight: 600;
       cursor: pointer;
-      transition: transform 0.2s ease, background 0.3s ease;
+      transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s;
+      box-shadow: 0 4px 14px rgba(0, 198, 255, 0.4);
     }
     .buttons button:hover {
       transform: translateY(-2px);
-      background: linear-gradient(135deg, #556cd6, #6e49a1);
+      background: linear-gradient(145deg, #009ce0, #005fcc);
+      box-shadow: 0 6px 18px rgba(0, 198, 255, 0.5);
     }
     .generated {
       background: rgba(255, 255, 255, 0.15);
@@ -111,6 +113,14 @@
     .gmail-entry input[type="checkbox"] {
       transform: scale(1.2);
     }
+    #copyStatus {
+      text-align: center;
+      font-size: 14px;
+      color: #90ffef;
+      margin-top: -10px;
+      margin-bottom: 15px;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -123,6 +133,7 @@
       <button onclick="deleteSelected()">🗑️ Delete Selected</button>
     </div>
     <div id="generatedDisplay" class="generated"></div>
+    <div id="copyStatus">Copied!</div>
     <div class="stats" id="statsDisplay"></div>
     <h2 style="margin: 25px 0 10px; text-align:center; font-weight: 600;">📜 History</h2>
     <ul id="historyList"></ul>
@@ -171,7 +182,15 @@
 
     function copyGmail() {
       const txt = document.getElementById('generatedDisplay').innerText.replace('Generated: ', '');
-      if (txt) navigator.clipboard.writeText(txt);
+      const unused = gmailList.filter(g => !history.find(h => h.email === g));
+      if (!txt || !gmailList.includes(txt)) return;
+      navigator.clipboard.writeText(txt);
+      const status = document.getElementById('copyStatus');
+      status.style.display = 'block';
+      status.innerText = 'Copied!';
+      setTimeout(() => {
+        status.style.display = 'none';
+      }, 1200);
     }
 
     function renderHistory() {

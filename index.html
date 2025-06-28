@@ -4,11 +4,178 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gmail Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: linear-gradient(to right, #1f4037, #99f2c8);
+      color: #fff;
+      padding: 30px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+    input[type="text"], input[type="file"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 8px 4px 12px 0;
+      border: none;
+      border-radius: 8px;
+      background: #00c6ff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #0072ff;
+    }
+    .generated {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin: 6px 0;
+    }
+    li input[type="checkbox"] {
+      margin-right: 10px;
+    }
+  </style>
 </head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="app.js"></script>
+  <div class="container">
+    <h1>Gmail Generator</h1>
+    <input type="text" id="gmailInput" placeholder="Add new Gmail">
+    <button onclick="addGmail()">Add</button>
+    <input type="file" accept=".txt" onchange="importGmail(event)">
+    <br>
+    <button onclick="generateGmail()">Generate</button>
+    <button onclick="copyGmail()">Copy</button>
+    <div id="generatedDisplay" class="generated"></div>
+    <h2 style="margin-top: 20px;">History</h2>
+    <ul id="historyList"></ul>
+    <button onclick="deleteSelected()">Delete Selected</button>
+  </div>
+
+  <script>
+    let gmailList = JSON.parse(localStorage.getItem('gmailList')) || [];
+    let history = JSON.parse(localStorage.getItem('history')) || [];
+    let selected = [];
+
+    function saveData() {
+      localStorage.setItem('gmailList', JSON.stringify(gmailList));
+      localStorage.setItem('history', JSON.stringify(history));
+    }
+
+    function addGmail() {
+      const input = document.getElementById('gmailInput');
+      const val = input.value.trim();
+      if (val && !gmailList.includes(val)) {
+        gmailList.push(val);
+        input.value = '';
+        saveData();
+      }
+    }
+
+    function importGmail(e) {
+      const file = e.target.files[0];
+      if (file && file.type === 'text/plain') {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          const lines = event.target.result.split('\n').map(l => l.trim()).filter(l => l);
+          lines.forEach(g => {
+            if (!gmailList.includes(g)) gmailList.push(g);
+          });
+          saveData();
+        };
+        reader.readAsText(file);
+      }
+    }
+
+    function generateGmail() {
+      const unused = gmailList.filter(g => !history.includes(g));
+      if (unused.length === 0) {
+        alert("No new Gmail available");
+        return;
+      }
+      const random = unused[Math.floor(Math.random() * unused.length)];
+      document.getElementById('generatedDisplay').innerText = `Generated: ${random}`;
+      history.push(random);
+      saveData();
+      renderHistory();
+    }
+
+    function copyGmail() {
+      const txt = document.getElementById('generatedDisplay').innerText.replace('Generated: ', '');
+      if (txt) navigator.clipboard.writeText(txt);
+    }
+
+    function renderHistory() {
+      const ul = document.getElementById('historyList');
+      ul.innerHTML = '';
+      history.forEach(g => {
+        const li = document.createElement('li');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.onchange = () => toggleSelect(g);
+        if (selected.includes(g)) checkbox.checked = true;
+        li.appendChild(checkbox);
+        li.appendChild(document.createTextNode(g));
+        ul.appendChild(li);
+      });
+    }
+
+    function toggleSelect(g) {
+      if (selected.includes(g)) {
+        selected = selected.filter(x => x !== g);
+      } else {
+        selected.push(g);
+      }
+    }
+
+    function deleteSelected() {
+      history = history.filter(g => !selected.includes(g));
+      selected = [];
+      saveData();
+      renderHistory();
+    }
+
+    renderHistory();
+  </script>
 </body>
 </html>

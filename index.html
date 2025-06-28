@@ -61,18 +61,6 @@
       transform: scale(0.96);
       box-shadow: 0 2px 8px rgba(0, 198, 255, 0.2);
     }
-    .buttons button::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.2);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .buttons button:active::after {
-      opacity: 1;
-    }
     .generated {
       background: rgba(255, 255, 255, 0.15);
       padding: 16px;
@@ -124,7 +112,7 @@
       padding: 4px 10px;
       border-radius: 10px;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 12px;
     }
     .timestamp {
       font-size: 13px;
@@ -144,8 +132,8 @@
     }
     .delete-btn {
       display: block;
-      margin: 15px auto 0;
-      padding: 10px 20px;
+      margin: 8px auto 20px;
+      padding: 8px 18px;
       background: linear-gradient(145deg, #ff4e50, #f00000);
       color: #fff;
       border: none;
@@ -176,8 +164,8 @@
     <div id="copyStatus">Copied!</div>
     <div class="stats" id="statsDisplay"></div>
     <h2 style="margin: 25px 0 10px; text-align:center; font-weight: 600;">📜 History</h2>
-    <ul id="historyList"></ul>
     <button class="delete-btn" onclick="deleteSelected()">🗑️ Delete Selected</button>
+    <ul id="historyList"></ul>
   </div>
 
   <script>
@@ -218,7 +206,7 @@
       display.innerText = `Generated: ${random}`;
       display.classList.add('blink');
       setTimeout(() => display.classList.remove('blink'), 700);
-      history.unshift({ email: random, time: timestamp });
+      history.push({ email: random, time: timestamp });
       saveData();
       renderHistory();
       updateStats();
@@ -254,6 +242,7 @@
 
         const serial = document.createElement('span');
         serial.className = 'serial-number';
+        serial.style.fontSize = '12px';
         serial.innerText = `${index + 1}`;
 
         const text = document.createTextNode(email);

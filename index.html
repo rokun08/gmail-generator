@@ -4,117 +4,127 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gmail Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Inter', sans-serif;
     }
     body {
-      background: linear-gradient(to right, #1f4037, #99f2c8);
+      background: radial-gradient(circle at top left, #0f2027, #203a43, #2c5364);
       color: #fff;
-      padding: 30px;
+      padding: 40px 20px;
+      min-height: 100vh;
     }
     .container {
-      max-width: 700px;
+      max-width: 720px;
       margin: auto;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 24px;
+      padding: 40px 30px;
+      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
     h1 {
       text-align: center;
+      font-size: 34px;
       margin-bottom: 25px;
-      font-size: 32px;
-      font-weight: 600;
-      color: #e0ffe9;
+      font-weight: 700;
+      color: #f0f0f0;
     }
     input[type="file"] {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border: none;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.2);
-      color: #fff;
-      font-size: 14px;
+      padding: 14px;
+      margin-bottom: 24px;
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #eee;
     }
-    button {
+    .buttons button {
       padding: 12px 20px;
-      margin: 10px 10px 20px 0;
+      margin: 10px 8px 20px 0;
       border: none;
-      border-radius: 10px;
-      background: #00c6ff;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s;
+      transition: transform 0.2s ease, background 0.3s ease;
     }
-    button:hover {
-      background: #0072ff;
-      transform: scale(1.05);
+    .buttons button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #556cd6, #6e49a1);
     }
     .generated {
-      background: rgba(255, 255, 255, 0.2);
-      padding: 14px;
-      margin-top: 15px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 16px;
+      margin: 18px 0;
       border-radius: 12px;
-      font-size: 17px;
+      font-size: 18px;
+      text-align: center;
+      border-left: 4px solid #00ffcc;
     }
     .stats {
-      margin-top: 15px;
       font-size: 15px;
-      opacity: 0.95;
-      background: rgba(255,255,255,0.15);
-      padding: 10px;
-      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 16px;
+      opacity: 0.85;
     }
     ul {
       list-style: none;
       padding: 0;
     }
     li {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 10px 15px;
-      border-radius: 10px;
-      margin: 8px 0;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 16px;
+      border-radius: 14px;
+      margin-bottom: 12px;
+      transition: background 0.3s;
+    }
+    li:hover {
+      background: rgba(255, 255, 255, 0.12);
     }
     .gmail-entry {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 15px;
+      gap: 12px;
+      font-size: 16px;
+      font-weight: 500;
     }
     .serial-number {
+      background: #00ffc3;
+      color: #000;
+      padding: 4px 10px;
+      border-radius: 10px;
       font-weight: bold;
-      color: #ffd700;
+      font-size: 14px;
     }
     .timestamp {
       font-size: 13px;
       opacity: 0.7;
       margin-top: 6px;
     }
-    input[type="checkbox"] {
+    .gmail-entry input[type="checkbox"] {
       transform: scale(1.2);
-      margin-right: 8px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🌟 Gmail Generator</h1>
+    <h1>📧 Gmail Generator</h1>
     <input type="file" accept=".txt" onchange="importGmail(event)">
-    <div>
+    <div class="buttons">
       <button onclick="generateGmail()">🎲 Generate</button>
       <button onclick="copyGmail()">📋 Copy</button>
       <button onclick="deleteSelected()">🗑️ Delete Selected</button>
     </div>
     <div id="generatedDisplay" class="generated"></div>
     <div class="stats" id="statsDisplay"></div>
-    <h2 style="margin-top: 25px; font-size: 22px;">📜 History</h2>
+    <h2 style="margin: 25px 0 10px; text-align:center; font-weight: 600;">📜 History</h2>
     <ul id="historyList"></ul>
   </div>
 
@@ -170,7 +180,10 @@
       const now = new Date();
       history.forEach(({ email, time }, index) => {
         const li = document.createElement('li');
-        const label = document.createElement('label');
+
+        const gmailLine = document.createElement('div');
+        gmailLine.className = 'gmail-entry';
+
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.onchange = () => toggleSelect(email);
@@ -178,23 +191,21 @@
 
         const serial = document.createElement('span');
         serial.className = 'serial-number';
-        serial.innerText = `${index + 1}.`;
+        serial.innerText = `${index + 1}`;
 
-        const entry = document.createElement('div');
-        entry.className = 'gmail-entry';
-        entry.appendChild(serial);
-        entry.appendChild(document.createTextNode(email));
+        const text = document.createTextNode(email);
 
-        label.appendChild(checkbox);
-        label.appendChild(entry);
-        li.appendChild(label);
+        gmailLine.appendChild(checkbox);
+        gmailLine.appendChild(serial);
+        gmailLine.appendChild(text);
+        li.appendChild(gmailLine);
 
         const diffMin = Math.floor((now - new Date(time)) / 60000);
         const timeInfo = document.createElement('div');
         timeInfo.className = 'timestamp';
         timeInfo.innerText = `${diffMin === 0 ? 'Just now' : diffMin + ' minute(s) ago'}`;
-        li.appendChild(timeInfo);
 
+        li.appendChild(timeInfo);
         ul.appendChild(li);
       });
     }
@@ -217,7 +228,7 @@
 
     function updateStats() {
       const stats = document.getElementById('statsDisplay');
-      stats.innerText = `📦 Total: ${gmailList.length} | ✅ Generated: ${history.length}`;
+      stats.innerText = `Total Gmails: ${gmailList.length} | Generated: ${history.length}`;
     }
 
     renderHistory();

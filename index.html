@@ -45,21 +45,33 @@
       color: #eee;
     }
     .buttons button {
-      padding: 12px 20px;
+      padding: 12px 24px;
       margin: 10px 8px 20px 0;
       border: none;
-      border-radius: 50px;
+      border-radius: 999px;
       background: linear-gradient(145deg, #00c6ff, #0072ff);
       color: white;
       font-weight: 600;
       cursor: pointer;
-      transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s;
+      transition: transform 0.15s ease, background 0.3s ease, box-shadow 0.3s, scale 0.2s;
       box-shadow: 0 4px 14px rgba(0, 198, 255, 0.4);
+      position: relative;
     }
-    .buttons button:hover {
-      transform: translateY(-2px);
-      background: linear-gradient(145deg, #009ce0, #005fcc);
-      box-shadow: 0 6px 18px rgba(0, 198, 255, 0.5);
+    .buttons button:active {
+      transform: scale(0.96);
+      box-shadow: 0 2px 8px rgba(0, 198, 255, 0.2);
+    }
+    .buttons button::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .buttons button:active::after {
+      opacity: 1;
     }
     .generated {
       background: rgba(255, 255, 255, 0.15);

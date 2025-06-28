@@ -18,96 +18,104 @@
       padding: 30px;
     }
     .container {
-      max-width: 600px;
+      max-width: 700px;
       margin: auto;
       background: rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
     }
     h1 {
       text-align: center;
-      margin-bottom: 20px;
-      font-size: 28px;
+      margin-bottom: 25px;
+      font-size: 32px;
+      font-weight: 600;
+      color: #e0ffe9;
     }
     input[type="file"] {
-      width: calc(100% - 20px);
-      padding: 10px;
-      margin: 10px 0;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
       border: none;
-      border-radius: 8px;
-      outline: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 14px;
     }
     button {
-      padding: 10px 15px;
-      margin: 8px 4px 12px 0;
+      padding: 12px 20px;
+      margin: 10px 10px 20px 0;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       background: #00c6ff;
       color: white;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: background 0.3s ease, transform 0.2s;
     }
     button:hover {
       background: #0072ff;
+      transform: scale(1.05);
     }
     .generated {
       background: rgba(255, 255, 255, 0.2);
-      padding: 12px;
-      margin-top: 10px;
-      border-radius: 10px;
-      font-size: 16px;
+      padding: 14px;
+      margin-top: 15px;
+      border-radius: 12px;
+      font-size: 17px;
     }
     .stats {
       margin-top: 15px;
-      font-size: 14px;
-      opacity: 0.9;
+      font-size: 15px;
+      opacity: 0.95;
+      background: rgba(255,255,255,0.15);
+      padding: 10px;
+      border-radius: 10px;
     }
     ul {
       list-style: none;
       padding: 0;
     }
     li {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
       background: rgba(255, 255, 255, 0.1);
-      padding: 8px 12px;
-      border-radius: 8px;
-      margin: 6px 0;
-    }
-    li input[type="checkbox"] {
-      margin-right: 10px;
-    }
-    .timestamp {
-      font-size: 12px;
-      opacity: 0.7;
-      margin-top: 4px;
+      padding: 10px 15px;
+      border-radius: 10px;
+      margin: 8px 0;
     }
     .gmail-entry {
       display: flex;
       align-items: center;
       gap: 10px;
+      font-size: 15px;
     }
     .serial-number {
       font-weight: bold;
-      margin-right: 5px;
+      color: #ffd700;
+    }
+    .timestamp {
+      font-size: 13px;
+      opacity: 0.7;
+      margin-top: 6px;
+    }
+    input[type="checkbox"] {
+      transform: scale(1.2);
+      margin-right: 8px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Gmail Generator</h1>
+    <h1>🌟 Gmail Generator</h1>
     <input type="file" accept=".txt" onchange="importGmail(event)">
-    <br>
-    <button onclick="generateGmail()">Generate</button>
-    <button onclick="copyGmail()">Copy</button>
+    <div>
+      <button onclick="generateGmail()">🎲 Generate</button>
+      <button onclick="copyGmail()">📋 Copy</button>
+      <button onclick="deleteSelected()">🗑️ Delete Selected</button>
+    </div>
     <div id="generatedDisplay" class="generated"></div>
     <div class="stats" id="statsDisplay"></div>
-    <h2 style="margin-top: 20px;">History</h2>
+    <h2 style="margin-top: 25px; font-size: 22px;">📜 History</h2>
     <ul id="historyList"></ul>
-    <button onclick="deleteSelected()">Delete Selected</button>
   </div>
 
   <script>
@@ -162,7 +170,6 @@
       const now = new Date();
       history.forEach(({ email, time }, index) => {
         const li = document.createElement('li');
-
         const label = document.createElement('label');
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
@@ -210,7 +217,7 @@
 
     function updateStats() {
       const stats = document.getElementById('statsDisplay');
-      stats.innerText = `Total: ${gmailList.length} | Generated: ${history.length}`;
+      stats.innerText = `📦 Total: ${gmailList.length} | ✅ Generated: ${history.length}`;
     }
 
     renderHistory();

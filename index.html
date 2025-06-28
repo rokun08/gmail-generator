@@ -142,6 +142,26 @@
       margin-bottom: 15px;
       display: none;
     }
+    .delete-btn {
+      display: block;
+      margin: 15px auto 0;
+      padding: 10px 20px;
+      background: linear-gradient(145deg, #ff4e50, #f00000);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      transition: transform 0.15s ease, background 0.3s ease, box-shadow 0.3s;
+      box-shadow: 0 3px 12px rgba(255, 0, 0, 0.4);
+    }
+    .delete-btn:hover {
+      background: linear-gradient(145deg, #e93b3b, #cc0000);
+    }
+    .delete-btn:active {
+      transform: scale(0.96);
+    }
   </style>
 </head>
 <body>
@@ -151,13 +171,13 @@
     <div class="buttons">
       <button onclick="generateGmail()">🎲 Generate</button>
       <button onclick="copyGmail()">📋 Copy</button>
-      <button onclick="deleteSelected()">🗑️ Delete Selected</button>
     </div>
     <div id="generatedDisplay" class="generated"></div>
     <div id="copyStatus">Copied!</div>
     <div class="stats" id="statsDisplay"></div>
     <h2 style="margin: 25px 0 10px; text-align:center; font-weight: 600;">📜 History</h2>
     <ul id="historyList"></ul>
+    <button class="delete-btn" onclick="deleteSelected()">🗑️ Delete Selected</button>
   </div>
 
   <script>

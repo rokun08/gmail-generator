@@ -69,6 +69,15 @@
       font-size: 18px;
       text-align: center;
       border-left: 4px solid #00ffcc;
+      transition: background-color 0.3s ease;
+    }
+    .generated.blink {
+      animation: blink-green 0.6s;
+    }
+    @keyframes blink-green {
+      0%   { background-color: #00ff9966; }
+      50%  { background-color: #00cc7766; }
+      100% { background-color: rgba(255, 255, 255, 0.15); }
     }
     .stats {
       font-size: 15px;
@@ -173,7 +182,10 @@
       }
       const random = unused[Math.floor(Math.random() * unused.length)];
       const timestamp = new Date().toISOString();
-      document.getElementById('generatedDisplay').innerText = `Generated: ${random}`;
+      const display = document.getElementById('generatedDisplay');
+      display.innerText = `Generated: ${random}`;
+      display.classList.add('blink');
+      setTimeout(() => display.classList.remove('blink'), 700);
       history.unshift({ email: random, time: timestamp });
       saveData();
       renderHistory();

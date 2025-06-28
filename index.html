@@ -30,7 +30,7 @@
       margin-bottom: 20px;
       font-size: 28px;
     }
-    input[type="text"], input[type="file"] {
+    input[type="file"] {
       width: calc(100% - 20px);
       padding: 10px;
       margin: 10px 0;
@@ -59,14 +59,19 @@
       border-radius: 10px;
       font-size: 16px;
     }
+    .stats {
+      margin-top: 15px;
+      font-size: 14px;
+      opacity: 0.9;
+    }
     ul {
       list-style: none;
       padding: 0;
     }
     li {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
+      align-items: flex-start;
       background: rgba(255, 255, 255, 0.1);
       padding: 8px 12px;
       border-radius: 8px;
@@ -74,6 +79,11 @@
     }
     li input[type="checkbox"] {
       margin-right: 10px;
+    }
+    .timestamp {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-top: 4px;
     }
   </style>
 </head>
@@ -85,6 +95,7 @@
     <button onclick="generateGmail()">Generate</button>
     <button onclick="copyGmail()">Copy</button>
     <div id="generatedDisplay" class="generated"></div>
+    <div class="stats" id="statsDisplay"></div>
     <h2 style="margin-top: 20px;">History</h2>
     <ul id="historyList"></ul>
     <button onclick="deleteSelected()">Delete Selected</button>
@@ -110,22 +121,25 @@
             if (!gmailList.includes(g)) gmailList.push(g);
           });
           saveData();
+          updateStats();
         };
         reader.readAsText(file);
       }
     }
 
     function generateGmail() {
-      const unused = gmailList.filter(g => !history.includes(g));
+      const unused = gmailList.filter(g => !history.find(h => h.email === g));
       if (unused.length === 0) {
         alert("No new Gmail available");
         return;
       }
       const random = unused[Math.floor(Math.random() * unused.length)];
+      const timestamp = new Date().toISOString();
       document.getElementById('generatedDisplay').innerText = `Generated: ${random}`;
-      history.unshift(random); // add to beginning of history
+      history.unshift({ email: random, time: timestamp });
       saveData();
       renderHistory();
+      updateStats();
     }
 
     function copyGmail() {
@@ -136,34 +150,53 @@
     function renderHistory() {
       const ul = document.getElementById('historyList');
       ul.innerHTML = '';
-      history.forEach(g => {
+      const now = new Date();
+      history.forEach(({ email, time }, index) => {
         const li = document.createElement('li');
+
+        const label = document.createElement('label');
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        checkbox.onchange = () => toggleSelect(g);
-        if (selected.includes(g)) checkbox.checked = true;
-        li.appendChild(checkbox);
-        li.appendChild(document.createTextNode(g));
+        checkbox.onchange = () => toggleSelect(email);
+        if (selected.includes(email)) checkbox.checked = true;
+
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(`#${index + 1}: ${email}`));
+        li.appendChild(label);
+
+        const diffMin = Math.floor((now - new Date(time)) / 60000);
+        const timeInfo = document.createElement('div');
+        timeInfo.className = 'timestamp';
+        timeInfo.innerText = `${diffMin === 0 ? 'Just now' : diffMin + ' minute(s) ago'}`;
+        li.appendChild(timeInfo);
+
         ul.appendChild(li);
       });
     }
 
-    function toggleSelect(g) {
-      if (selected.includes(g)) {
-        selected = selected.filter(x => x !== g);
+    function toggleSelect(email) {
+      if (selected.includes(email)) {
+        selected = selected.filter(x => x !== email);
       } else {
-        selected.push(g);
+        selected.push(email);
       }
     }
 
     function deleteSelected() {
-      history = history.filter(g => !selected.includes(g));
+      history = history.filter(h => !selected.includes(h.email));
       selected = [];
       saveData();
       renderHistory();
+      updateStats();
+    }
+
+    function updateStats() {
+      const stats = document.getElementById('statsDisplay');
+      stats.innerText = `Total: ${gmailList.length} | Generated: ${history.length}`;
     }
 
     renderHistory();
+    updateStats();
   </script>
 </body>
 </html>

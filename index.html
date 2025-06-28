@@ -80,8 +80,6 @@
 <body>
   <div class="container">
     <h1>Gmail Generator</h1>
-    <input type="text" id="gmailInput" placeholder="Add new Gmail">
-    <button onclick="addGmail()">Add</button>
     <input type="file" accept=".txt" onchange="importGmail(event)">
     <br>
     <button onclick="generateGmail()">Generate</button>
@@ -100,16 +98,6 @@
     function saveData() {
       localStorage.setItem('gmailList', JSON.stringify(gmailList));
       localStorage.setItem('history', JSON.stringify(history));
-    }
-
-    function addGmail() {
-      const input = document.getElementById('gmailInput');
-      const val = input.value.trim();
-      if (val && !gmailList.includes(val)) {
-        gmailList.push(val);
-        input.value = '';
-        saveData();
-      }
     }
 
     function importGmail(e) {
@@ -135,7 +123,7 @@
       }
       const random = unused[Math.floor(Math.random() * unused.length)];
       document.getElementById('generatedDisplay').innerText = `Generated: ${random}`;
-      history.push(random);
+      history.unshift(random); // add to beginning of history
       saveData();
       renderHistory();
     }
